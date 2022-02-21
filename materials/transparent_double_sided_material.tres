@@ -1,0 +1,47 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=2]
+
+[sub_resource type="VisualShaderNodeTextureUniform" id=1]
+uniform_name = "Albedo"
+
+[sub_resource type="VisualShader" id=2]
+code = "shader_type spatial;
+render_mode cull_front, specular_schlick_ggx, async_visible;
+
+uniform sampler2D Albedo;
+
+
+
+void vertex() {
+// Output:0
+
+}
+
+void fragment() {
+// TextureUniform:2
+	vec3 n_out2p0;
+	float n_out2p1;
+	{
+		vec4 n_tex_read = texture(Albedo, UV.xy);
+		n_out2p0 = n_tex_read.rgb;
+		n_out2p1 = n_tex_read.a;
+	}
+
+// Output:0
+	ALBEDO = n_out2p0;
+	ALPHA_SCISSOR = n_out2p1;
+
+}
+
+void light() {
+// Output:0
+
+}
+"
+graph_offset = Vector2( -242, 333 )
+modes/cull = 1
+nodes/fragment/2/node = SubResource( 1 )
+nodes/fragment/2/position = Vector2( 140, 260 )
+nodes/fragment/connections = PoolIntArray( 2, 0, 0, 0, 2, 1, 0, 18 )
+
+[resource]
+shader = SubResource( 2 )
