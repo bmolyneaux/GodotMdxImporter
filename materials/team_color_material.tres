@@ -11,7 +11,7 @@ uniform_name = "TeamColor"
 [sub_resource type="VisualShaderNodeVectorInterp" id=3]
 
 [sub_resource type="VisualShaderNodeIf" id=5]
-default_input_values = [ 0, 0.0, 1, 0.98, 2, 1e-05, 3, Vector3( 0, 0, 0 ), 4, Vector3( 0, 0, 0 ), 5, Vector3( 0, 0, 0 ) ]
+default_input_values = [ 0, 0.0, 1, 0.8, 2, 1e-05, 3, Vector3( 0, 0, 0 ), 4, Vector3( 0, 0, 0 ), 5, Vector3( 0, 0, 0 ) ]
 
 [sub_resource type="VisualShaderNodeScalarSmoothStep" id=6]
 
@@ -61,7 +61,6 @@ void light() {
 
 }
 "
-graph_offset = Vector2( -361, -403 )
 modes/cull = 1
 nodes/fragment/0/position = Vector2( 620, 180 )
 nodes/fragment/2/node = SubResource( 1 )
