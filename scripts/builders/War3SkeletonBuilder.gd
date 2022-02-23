@@ -23,7 +23,7 @@ func build_skeleton(model: War3Model) -> Skeleton:
 		if node.parent:
 			unparented_bones.append(bone_index)
 		else:
-			skeleton.set_bone_rest(bone_index, model.pivot_points[bone_index])
+			skeleton.set_bone_rest(bone_index, model.pivot_points[node.id])
 	
 	var unparented_helpers = []
 	
@@ -37,7 +37,7 @@ func build_skeleton(model: War3Model) -> Skeleton:
 		if node.parent:
 			unparented_helpers.append(helper_index)
 		else:
-			skeleton.set_bone_rest(bone_index, model.pivot_points[bone_index])
+			skeleton.set_bone_rest(bone_index, model.pivot_points[node.id])
 			
 	while len(unparented_bones) > 0 or len(unparented_helpers) > 0:
 		for i in len(unparented_bones):
@@ -48,7 +48,7 @@ func build_skeleton(model: War3Model) -> Skeleton:
 				skeleton.set_bone_parent(bone_index, node.parent)
 				var parent_bone = skeleton.get_bone_parent(bone_index)
 				var inverse_parent_global = skeleton.get_bone_global_pose(parent_bone).affine_inverse()
-				var global_pose = model.pivot_points[bone_index]
+				var global_pose = model.pivot_points[node.id]
 				
 				var local_pose = global_pose * inverse_parent_global
 				skeleton.set_bone_rest(bone_index, local_pose)
@@ -66,7 +66,7 @@ func build_skeleton(model: War3Model) -> Skeleton:
 				skeleton.set_bone_parent(bone_index, node.parent)
 				var parent_bone = skeleton.get_bone_parent(bone_index)
 				var inverse_parent_global = skeleton.get_bone_global_pose(parent_bone).affine_inverse()
-				var global_pose = model.pivot_points[bone_index]
+				var global_pose = model.pivot_points[node.id]
 				
 				var local_pose = global_pose * inverse_parent_global
 				skeleton.set_bone_rest(bone_index, local_pose)
