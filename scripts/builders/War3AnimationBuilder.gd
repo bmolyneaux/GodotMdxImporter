@@ -2,10 +2,12 @@ extends Reference
 
 const War3Model = preload("../types/War3Model.gd")
 const War3Sequence = preload("../types/War3Sequence.gd")
+const War3GeosetAnimation = preload("../types/War3GeosetAnimation.gd")
 
 
 func build(model: War3Model, skeleton: Skeleton) -> AnimationPlayer:
 	var animation_player = AnimationPlayer.new()
+	animation_player.name = "AnimationPlayer"
 	
 	for sequence in model.sequences:
 		sequence = sequence as War3Sequence
@@ -17,7 +19,12 @@ func build(model: War3Model, skeleton: Skeleton) -> AnimationPlayer:
 			var rotations = {}
 			var scales = {}
 			
-			var node = model.bones[bone].node
+			var node
+			if bone < len(model.bones):
+				node = model.bones[bone].node
+			else:
+				node = model.helpers[bone - len(model.bones)].node
+
 			if node.translations:
 				for i in len(node.translations.times):
 					var time = node.translations.times[i]
@@ -55,7 +62,23 @@ func build(model: War3Model, skeleton: Skeleton) -> AnimationPlayer:
 						transform.basis = transform.basis.scaled(scales[time])
 					var seconds = (time - sequence.interval_start) / 24.0 / 41.666666666
 					var key = animation.transform_track_insert_key(track, seconds, transform.origin, transform.basis.get_rotation_quat(), transform.basis.get_scale())
+					
+					# TODO
 					animation.loop = true
+					
+		for geoset_animation in model.geoset_animations:
+			geoset_animation = geoset_animation as War3GeosetAnimation
+			var alpha_track = geoset_animation.alpha_track
+			var mesh = skeleton.get_child(geoset_animation.geoset_id)
+			var track = animation.add_track(Animation.TYPE_VALUE)
+			animation.track_set_path(track, "Skeleton/" + mesh.name + ":visible")
+			for i in len(alpha_track.times):
+				var time = alpha_track.times[i]
+				var value = true if alpha_track.values[i] == 1 else false
+				if sequence.interval_start <= time and time <= sequence.interval_end:
+					var seconds = (time - sequence.interval_start) / 24.0 / 41.666666666
+					animation.track_insert_key(track, seconds, value)
+			
 		
 		animation_player.add_animation(sequence.name, animation)
 		

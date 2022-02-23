@@ -15,14 +15,15 @@ func build(material: War3Material, textures: Array) -> Material:
 		var two_sided = layer.shading_flags & 0x10 != 0
 		var transparent = layer.filter_mode == 1
 		var blend = layer.filter_mode == 2
-		var add = layer.filter_mode == 3
+		# I'm not actually sure what AddAlpha (4) means... pretend it's Add
+		var add = layer.filter_mode == 3 or layer.filter_mode == 4
 		var team_color = textures[layer.texture_id] is TeamColorTexture
 		var team_glow = textures[layer.texture_id] is TeamGlowTexture
 		
 		assert(not (team_color and blend))
 		assert(not (team_glow and blend))
 		
-		assert(layer.filter_mode <= 3)
+		assert(layer.filter_mode <= 4, "Unsupported filter mode %d" % layer.filter_mode)
 		
 		if team_color:
 			# TODO: Doesn't handle case where material is just a big team color situation
@@ -43,6 +44,7 @@ func build(material: War3Material, textures: Array) -> Material:
 			new_material.params_cull_mode = SpatialMaterial.CULL_FRONT
 			new_material.albedo_texture = textures[layer.texture_id]
 			new_material.params_use_alpha_scissor = transparent
+			new_material.params_alpha_scissor_threshold = 0.8
 			if two_sided:
 				new_material.params_cull_mode = SpatialMaterial.CULL_DISABLED
 			if add:

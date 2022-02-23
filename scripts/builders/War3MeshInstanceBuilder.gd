@@ -11,6 +11,7 @@ func build(model: War3Model, meshes: Array, materials: Array, skins: Array) -> A
 		var mesh = meshes[mesh_index]
 		var mesh_instance = MeshInstance.new()
 		mesh_instance.mesh = mesh
+		mesh_instance.name = str(mesh_index)
 		mesh_instance.set_surface_material(0, materials[material_id])
 		
 		mesh_instance.skin = skins[mesh_index]

@@ -30,3 +30,10 @@ static func get_bone_transform(file: File) -> Transform:
 		Vector3(0, 0, 1),
 		Vector3(x, z, -y)
 		)
+
+
+static func get_color(file: File) -> Color:
+	var r = file.get_float()
+	var g = file.get_float()
+	var b = file.get_float()
+	return Color(r, g, b)

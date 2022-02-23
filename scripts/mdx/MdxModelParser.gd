@@ -2,10 +2,14 @@ extends Reference
 
 const MdxBoneParser = preload("../mdx/MdxBoneParser.gd")
 const MdxGeosetParser = preload("../mdx/MdxGeosetParser.gd")
+const MdxHelperParser = preload("../mdx/MdxHelperParser.gd")
 const MdxMaterialParser = preload("../mdx/MdxMaterialParser.gd")
 const MdxPivotPointParser = preload("../mdx/MdxPivotPointParser.gd")
 const MdxSequenceParser = preload("../mdx/MdxSequenceParser.gd")
 const MdxTextureParser = preload("../mdx/MdxTextureParser.gd")
+const MdxGeosetAnimationParser = preload("../mdx/MdxGeosetAnimationParser.gd")
+const MdxAttachmentParser = preload("../mdx/MdxAttachmentParser.gd")
+
 
 const MdxUtils = preload("../mdx/MdxUtils.gd")
 
@@ -44,9 +48,12 @@ const CHUNKS = [
 	"GLBS",
 	"PRE2",
 	"RIBB",
+	"CAMS",
+	"LITE",
 ]
 
 func parse_chunk(file: File, model: War3Model, chunk_id: String, chunk_size: int) -> void:
+	print(chunk_id)
 	if chunk_id == CHUNK_VERSION:
 		model.Version = file.get_32()
 	elif chunk_id == CHUNK_TEXTURE:
@@ -61,6 +68,12 @@ func parse_chunk(file: File, model: War3Model, chunk_id: String, chunk_size: int
 		model.pivot_points = MdxPivotPointParser.new().parse(file, chunk_size)
 	elif chunk_id == CHUNK_SEQUENCE:
 		model.sequences = MdxSequenceParser.new().parse(file, chunk_size)
+	elif chunk_id == CHUNK_HELPER:
+		model.helpers = MdxHelperParser.new().parse(file, chunk_size, model.Version)
+	elif chunk_id == CHUNK_GEOSET_ANIMATION:
+		model.geoset_animations = MdxGeosetAnimationParser.new().parse(file, chunk_size, model.Version)
+	elif chunk_id == CHUNK_ATTACHMENT:
+		model.attachments = MdxAttachmentParser.new().parse(file, chunk_size)
 
 
 func parse(file: File) -> War3Model:
@@ -73,7 +86,7 @@ func parse(file: File) -> War3Model:
 	while not file.eof_reached() and file.get_position() < file_size:
 		
 		var chunk_id = MdxUtils.get_chunk_id(file)
-		assert(chunk_id in CHUNKS)
+		assert(chunk_id in CHUNKS, "Unexpected chunk %s" % chunk_id)
 		
 		var chunk_size = file.get_32()
 		assert(chunk_size != 0)
