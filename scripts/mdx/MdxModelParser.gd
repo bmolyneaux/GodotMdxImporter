@@ -53,7 +53,6 @@ const CHUNKS = [
 ]
 
 func parse_chunk(file: File, model: War3Model, chunk_id: String, chunk_size: int) -> void:
-	print(chunk_id)
 	if chunk_id == CHUNK_VERSION:
 		model.Version = file.get_32()
 	elif chunk_id == CHUNK_TEXTURE:
@@ -63,17 +62,17 @@ func parse_chunk(file: File, model: War3Model, chunk_id: String, chunk_size: int
 	elif chunk_id == CHUNK_GEOSET:
 		model.geosets = MdxGeosetParser.new().parse(file, chunk_size, model.Version)
 	elif chunk_id == CHUNK_BONE:
-		model.bones = MdxBoneParser.new().parse(file, chunk_size, model.Version)
+		model.nodes.append_array(MdxBoneParser.new().parse(file, chunk_size, model.Version))
 	elif chunk_id == CHUNK_PIVOT_POINT:
 		model.pivot_points = MdxPivotPointParser.new().parse(file, chunk_size)
 	elif chunk_id == CHUNK_SEQUENCE:
 		model.sequences = MdxSequenceParser.new().parse(file, chunk_size)
 	elif chunk_id == CHUNK_HELPER:
-		model.helpers = MdxHelperParser.new().parse(file, chunk_size, model.Version)
+		model.nodes.append_array(MdxHelperParser.new().parse(file, chunk_size, model.Version))
 	elif chunk_id == CHUNK_GEOSET_ANIMATION:
 		model.geoset_animations = MdxGeosetAnimationParser.new().parse(file, chunk_size, model.Version)
 	elif chunk_id == CHUNK_ATTACHMENT:
-		model.attachments = MdxAttachmentParser.new().parse(file, chunk_size)
+		model.nodes.append_array(MdxAttachmentParser.new().parse(file, chunk_size))
 
 
 func parse(file: File) -> War3Model:

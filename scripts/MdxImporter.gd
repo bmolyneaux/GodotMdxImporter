@@ -40,5 +40,7 @@ func import(mdx_path: String) -> Spatial:
 	root.add_child(animation_player)
 	animation_player.set_owner(root)
 	
+	animation_player.play("walk")
+	
 	root.scale = Vector3(0.01, 0.01, 0.01)
 	return root

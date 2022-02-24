@@ -9,7 +9,6 @@ const MdxUtils = preload("./MdxUtils.gd")
 
 func parse_attachment_visibility(file: File):
 	var chunk_id = MdxUtils.get_chunk_id(file)
-	print("parse_attachment_visibility")
 	assert(chunk_id == "KATV")
 	var visibility = War3VisibilityTrack.new()
 	var tracks_count = file.get_32()
@@ -33,7 +32,7 @@ func parse_attachment(file: File, data_size: int) -> War3Attachment:
 	
 	var final_position = file.get_position() + data_size
 	
-	attachment.node = MdxNodeParser.new().parse_node(file)
+	MdxNodeParser.new().parse_node(file, attachment)
 	var path = file.get_buffer(260)
 	var attachment_id = file.get_32()
 	

@@ -1,10 +1,7 @@
-extends Reference
-
-const War3Node = preload("../types/War3Node.gd")
+extends "res://scripts/types/War3Node.gd"
 
 var type = "bone"
-var node: War3Node
 var geoset_id = null
 
 func is_billboard() -> bool:
-	return node.flags & 0x8 != 0
+	return flags & 0x8 != 0

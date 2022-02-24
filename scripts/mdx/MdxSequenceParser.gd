@@ -14,7 +14,7 @@ func parse_sequence(file: File) -> War3Sequence:
 	
 	sequence.movement_speed = file.get_float()
 	
-	var flags = file.get_32()
+	sequence.flags = file.get_32()
 	
 	sequence.rarity = file.get_float()
 	var sync_point = file.get_32()

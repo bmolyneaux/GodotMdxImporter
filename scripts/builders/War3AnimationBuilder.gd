@@ -13,17 +13,13 @@ func build(model: War3Model, skeleton: Skeleton) -> AnimationPlayer:
 		sequence = sequence as War3Sequence
 		var animation = Animation.new()
 		
-		for bone in skeleton.get_bone_count():
+		for bone_index in skeleton.get_bone_count():
 			var times = {}
 			var translations = {}
 			var rotations = {}
 			var scales = {}
 			
-			var node
-			if bone < len(model.bones):
-				node = model.bones[bone].node
-			else:
-				node = model.helpers[bone - len(model.bones)].node
+			var node = model.nodes[bone_index]
 
 			if node.translations:
 				for i in len(node.translations.times):
@@ -49,7 +45,7 @@ func build(model: War3Model, skeleton: Skeleton) -> AnimationPlayer:
 			
 			if times:
 				var track = animation.add_track(Animation.TYPE_TRANSFORM)
-				animation.track_set_path(track, "Skeleton:" + skeleton.get_bone_name(bone))
+				animation.track_set_path(track, "Skeleton:" + skeleton.get_bone_name(bone_index))
 				animation.length = (sequence.interval_end - sequence.interval_start) / 24.0 / 41.666666666
 				
 				for time in times:
@@ -63,8 +59,7 @@ func build(model: War3Model, skeleton: Skeleton) -> AnimationPlayer:
 					var seconds = (time - sequence.interval_start) / 24.0 / 41.666666666
 					var key = animation.transform_track_insert_key(track, seconds, transform.origin, transform.basis.get_rotation_quat(), transform.basis.get_scale())
 					
-					# TODO
-					animation.loop = true
+					animation.loop = sequence.flags & 0x1 == 0
 					
 		for geoset_animation in model.geoset_animations:
 			geoset_animation = geoset_animation as War3GeosetAnimation

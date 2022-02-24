@@ -47,8 +47,7 @@ static func parse_rotation_track(file: File) -> War3RotationTrack:
 	return track
 
 
-static func parse_node(file: File):
-	var node = War3Node.new()
+static func parse_node(file: File, node: War3Node):
 	var current_position = file.get_position()
 	var chunk_size = file.get_32()
 	var final_position = current_position + chunk_size

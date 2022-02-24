@@ -11,7 +11,7 @@ func parse(file: File, chunk_size: int, version: int) -> Array:
 	var final_position = file.get_position() + chunk_size
 	while file.get_position() < final_position:
 		var helper = War3Helper.new()
-		helper.node = MdxNodeParser.parse_node(file)
+		MdxNodeParser.parse_node(file, helper)
 		helpers.append(helper)
 	
 	return helpers
