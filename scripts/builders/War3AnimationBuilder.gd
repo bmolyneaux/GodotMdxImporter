@@ -60,20 +60,33 @@ func build(model: War3Model, skeleton: Skeleton) -> AnimationPlayer:
 					var key = animation.transform_track_insert_key(track, seconds, transform.origin, transform.basis.get_rotation_quat(), transform.basis.get_scale())
 					
 					animation.loop = sequence.flags & 0x1 == 0
-					
+		
+		var animated_geosets = []
+		
 		for geoset_animation in model.geoset_animations:
 			geoset_animation = geoset_animation as War3GeosetAnimation
 			var alpha_track = geoset_animation.alpha_track
 			var mesh = skeleton.get_child(geoset_animation.geoset_id)
 			var track = animation.add_track(Animation.TYPE_VALUE)
 			animation.track_set_path(track, "Skeleton/" + mesh.name + ":visible")
+			var has_keys = false
 			for i in len(alpha_track.times):
 				var time = alpha_track.times[i]
 				var value = true if alpha_track.values[i] == 1 else false
 				if sequence.interval_start <= time and time <= sequence.interval_end:
 					var seconds = (time - sequence.interval_start) / 24.0 / 41.666666666
 					animation.track_insert_key(track, seconds, value)
-			
+					has_keys = true
+					
+			if has_keys:
+				animated_geosets.append(geoset_animation.geoset_id)
+		
+		for geoset_id in skeleton.get_child_count():
+			if not geoset_id in animated_geosets:
+				var mesh = skeleton.get_child(geoset_id)
+				var track = animation.add_track(Animation.TYPE_VALUE)
+				animation.track_set_path(track, "Skeleton/" + mesh.name + ":visible")
+				animation.track_insert_key(track, 0, true)
 		
 		animation_player.add_animation(sequence.name, animation)
 		
