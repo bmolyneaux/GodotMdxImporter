@@ -10,6 +10,9 @@ const War3SkeletonBuilder = preload("./builders/War3SkeletonBuilder.gd")
 const War3SkinBuilder = preload("./builders/War3SkinBuilder.gd")
 const War3TextureBuilder = preload("./builders/War3TextureBuilder.gd")
 
+const War3Bone = preload("./types/War3Bone.gd")
+const UnitModel = preload("./UnitModel.gd")
+
 
 func import(mdx_path: String) -> Spatial:
 	var root = Spatial.new()
@@ -40,7 +43,12 @@ func import(mdx_path: String) -> Spatial:
 	root.add_child(animation_player)
 	animation_player.set_owner(root)
 	
-	animation_player.play("walk")
+	root.set_script(UnitModel)
+	root.billboard_bones = []
+	for i in len(model.nodes):
+		var node = model.nodes[i]
+		if node is War3Bone and node.is_billboard():
+			root.billboard_bones.append(i)
 	
 	root.scale = Vector3(0.01, 0.01, 0.01)
 	return root
