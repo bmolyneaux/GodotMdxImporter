@@ -1,5 +1,6 @@
 extends Resource
 
+export(String) var name
 export(String) var Version
 export(Resource) var Info  # War3Info
 export(Array) var textures  # Array[War3Texture]

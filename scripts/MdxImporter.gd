@@ -16,10 +16,11 @@ const UnitModel = preload("./UnitModel.gd")
 
 func import(mdx_path: String) -> Spatial:
 	var root = Spatial.new()
-	root.name = "Mdx"
 	
 	var mdx_parser = MdxParser.new(mdx_path)
 	var model = mdx_parser.parse()
+	
+	root.name = model.name
 	
 	var textures = War3TextureBuilder.new().build_textures(model)
 	

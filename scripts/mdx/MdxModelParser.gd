@@ -73,6 +73,13 @@ func parse_chunk(file: File, model: War3Model, chunk_id: String, chunk_size: int
 		model.geoset_animations = MdxGeosetAnimationParser.new().parse(file, chunk_size, model.Version)
 	elif chunk_id == CHUNK_ATTACHMENT:
 		model.nodes.append_array(MdxAttachmentParser.new().parse(file, chunk_size))
+	elif chunk_id == CHUNK_MODEL:
+		model.name = file.get_buffer(0x50).get_string_from_utf8()
+		var animation_file = file.get_buffer(0x104).get_string_from_utf8()
+		var bounds_radius = file.get_float()
+		var minimum_extent = MdxUtils.get_vector3(file)
+		var maximum_extent = MdxUtils.get_vector3(file)
+		var blend_time = file.get_32()
 
 
 func parse(file: File) -> War3Model:
