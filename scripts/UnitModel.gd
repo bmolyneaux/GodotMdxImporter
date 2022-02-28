@@ -1,6 +1,5 @@
 tool
 extends Spatial
-class_name UnitModel
 
 export(Array) var billboard_bones
 
